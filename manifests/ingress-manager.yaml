@@ -1,0 +1,82 @@
+---
+# kubectl create serviceaccount ingress-manager-sa --dry-run=client -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ingress-manager-sa
+  namespace: default
+
+---
+# kubectl create clusterrole ingress-manager-role --resource=ingress,service --verb=list,watch,create,update,delete --dry-run=client -o yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ingress-manager-role
+  namespace: default
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - list
+      - watch
+      - create
+      - update
+      - delete
+
+---
+# kubectl create clusterrolebinding ingress-manager-rb --role=ingress-manager-role --serviceaccount=default:ingress-manager-sa --dry-run=client -o yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ingress-manager-rb
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: ingress-manager-sa
+    namespace: default
+
+---
+# kubectl create deployment ingress-manager --image=ishenle/ingress-manager:4fa2542 --replicas=1 --dry-run=client -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ingress-manager
+  name: ingress-manager
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress-manager
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ingress-manager
+    spec:
+      serviceAccountName: ingress-manager-sa
+      containers:
+        - image: ishenle/ingress-manager:4fa2542
+          name: ingress-manager
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
