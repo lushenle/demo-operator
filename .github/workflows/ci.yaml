@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Build, tag, and push image to Docker Hub
         env:
           IMAGE_TAG: ${{ steps.sha.outputs.sha_short }}
         run: |
