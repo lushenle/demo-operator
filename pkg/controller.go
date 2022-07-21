@@ -143,11 +143,13 @@ func (c *controller) constructIngress(service *v14.Service) *v12.Ingress {
 	ingress.Name = service.Name
 	ingress.Namespace = service.Namespace
 	pathType := v12.PathTypePrefix
+	ingressClassName := "nginx"
 
 	ingress.Spec = v12.IngressSpec{
+		IngressClassName: &ingressClassName,
 		Rules: []v12.IngressRule{
 			{
-				Host: "ingress.shenle.lu",
+				Host: "go-web.shenle.lu",
 				IngressRuleValue: v12.IngressRuleValue{
 					HTTP: &v12.HTTPIngressRuleValue{
 						Paths: []v12.HTTPIngressPath{
@@ -158,7 +160,7 @@ func (c *controller) constructIngress(service *v14.Service) *v12.Ingress {
 									Service: &v12.IngressServiceBackend{
 										Name: service.Name,
 										Port: v12.ServiceBackendPort{
-											Number: 80,
+											Number: 3000,
 										},
 									},
 								},
