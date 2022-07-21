@@ -71,7 +71,7 @@ spec:
     spec:
       serviceAccountName: ingress-manager-sa
       containers:
-        - image: ishenle/ingress-manager:4fa2542
+        - image: ishenle/ingress-manager:2a9af9a
           name: ingress-manager
           resources:
             limits:
