@@ -17,4 +17,4 @@ WORKDIR /app
 # Copy app from builder
 COPY --from=builder /app/ingress-manager .
 # Start app
-CMD ['/app/ingress-manager']
+CMD ["/app/ingress-manager"]
