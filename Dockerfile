@@ -16,5 +16,14 @@ LABEL "maintainer"="Shenle Lu <lushenle@gmail.com>" \
 WORKDIR /app
 # Copy app from builder
 COPY --from=builder /app/ingress-manager .
+
+# Create user
+RUN addgroup -g 65535 ishenle && \
+    adduser --shell /sbin/nologin --disabled-password \
+    --no-create-home --uid 65535 --ingroup ishenle ishenle
+
+# Run the process as ishenle
+USER ishenle
+
 # Start app
 CMD ["/app/ingress-manager"]
