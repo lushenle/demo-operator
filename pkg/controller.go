@@ -149,7 +149,7 @@ func (c *controller) constructIngress(service *v14.Service) *v12.Ingress {
 		IngressClassName: &ingressClassName,
 		Rules: []v12.IngressRule{
 			{
-				Host: "go-web.shenle.lu",
+				Host: service.Name + ".shenle.lu",
 				IngressRuleValue: v12.IngressRuleValue{
 					HTTP: &v12.HTTPIngressRuleValue{
 						Paths: []v12.HTTPIngressPath{
